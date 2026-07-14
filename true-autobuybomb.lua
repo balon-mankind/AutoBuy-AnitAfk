@@ -7,8 +7,9 @@ local VirtualUser = game:GetService("VirtualUser")
 local CoreGui = game:GetService("CoreGui")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 
-_G.AutoBuyBombs = true -- 預設關閉自動購買
-_G.AntiAFKEnabled = true -- 預設開啟防踢功能
+-- 🌟 預設全部開啟 (All True)
+_G.AutoBuyBombs = true 
+_G.AntiAFKEnabled = true
 
 local CHECK_DELAY = 0.1  -- 有貨時的狂刷頻率（秒）
 local SLEEP_DELAY = 60    -- 沒貨時的休眠冷卻時間（秒）
@@ -25,7 +26,7 @@ local targetBombs = {
 }
 
 -- ==========================================================
--- 1. 獨立防踢 (Anti-AFK) 核心邏輯 - 每 30 秒執行一次
+-- 1. 獨立防踢 (Anti-AFK) 核心邏輯 - 每 30 秒執行一次 (模擬 A D 移動)
 -- ==========================================================
 task.spawn(function()
     while true do
@@ -85,22 +86,10 @@ ScreenGui.Name = "MountainRNG_AutoBuyUI"
 ScreenGui.Parent = CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- ==========================================================
--- 2. 建立精美 GUI 控制面板 (防止重複生成)
--- ==========================================================
-if CoreGui:FindFirstChild("MountainRNG_AutoBuyUI") then
-    CoreGui.MountainRNG_AutoBuyUI:Destroy()
-end
-
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "MountainRNG_AutoBuyUI"
-ScreenGui.Parent = CoreGui
-ScreenGui.ResetOnSpawn = false
-
--- 主面板 (加高高度至 210，完美容納 3 個按鈕與底部提示字)
+-- 主面板 (高度 210，完美容納 3 個按鈕與底部提示字，絕不重疊)
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 220, 0, 210) -- 高度拉長到 210
+MainFrame.Size = UDim2.new(0, 220, 0, 210)
 MainFrame.Position = UDim2.new(0.05, 0, 0.2, 0)
 MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 MainFrame.BorderSizePixel = 0
@@ -124,25 +113,25 @@ TitleLabel.TextSize = 14
 TitleLabel.Font = Enum.Font.SourceSansBold
 TitleLabel.Parent = MainFrame
 
--- 狀態提示
+-- 狀態提示 (因為預設開啟，所以文字改成綠色的啟用狀態)
 local StatusLabel = Instance.new("TextLabel")
 StatusLabel.Name = "StatusLabel"
 StatusLabel.Size = UDim2.new(1, 0, 0, 20)
 StatusLabel.Position = UDim2.new(0, 0, 0, 28)
 StatusLabel.BackgroundTransparency = 1
-StatusLabel.Text = "目前狀態: 已關閉"
-StatusLabel.TextColor3 = Color3.fromRGB(200, 50, 50)
+StatusLabel.Text = "目前狀態: 監控中..."
+StatusLabel.TextColor3 = Color3.fromRGB(50, 200, 50)
 StatusLabel.TextSize = 11
 StatusLabel.Font = Enum.Font.SourceSans
 StatusLabel.Parent = MainFrame
 
--- 【自動購買切換按鈕】
+-- 【自動購買切換按鈕】 (因為預設開啟，預設為綠色 ON)
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Name = "ToggleBtn"
 ToggleBtn.Size = UDim2.new(0, 180, 0, 32)
 ToggleBtn.Position = UDim2.new(0.5, -90, 0, 55)
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50) -- 預設紅色 (OFF)
-ToggleBtn.Text = "自動購買: OFF"
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50) -- 🌟 預設綠色 (ON)
+ToggleBtn.Text = "自動購買: ON"
 ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleBtn.TextSize = 14
 ToggleBtn.Font = Enum.Font.SourceSansBold
@@ -152,12 +141,12 @@ local BtnCorner1 = Instance.new("UICorner")
 BtnCorner1.CornerRadius = UDim.new(0, 6)
 BtnCorner1.Parent = ToggleBtn
 
--- 【Anti-AFK 切換按鈕】
+-- 【Anti-AFK 切換按鈕】 (預設綠色 ON)
 local AfkBtn = Instance.new("TextButton")
 AfkBtn.Name = "AfkBtn"
 AfkBtn.Size = UDim2.new(0, 180, 0, 32)
 AfkBtn.Position = UDim2.new(0.5, -90, 0, 95)
-AfkBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50) -- 預設綠色 (ON)
+AfkBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50) -- 🌟 預設綠色 (ON)
 AfkBtn.Text = "Anti-AFK: ON (30s)"
 AfkBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 AfkBtn.TextSize = 14
@@ -172,16 +161,15 @@ BtnCorner2.Parent = AfkBtn
 local DividerBtn = Instance.new("TextButton")
 DividerBtn.Name = "DividerBtn"
 DividerBtn.Size = UDim2.new(0, 180, 0, 32)
-DividerBtn.Position = UDim2.new(0.5, -90, 0, 135) -- 放在 Anti-AFK 按鈕下方，間距為 8 像素
-DividerBtn.BackgroundColor3 = Color3.fromRGB(0, 122, 255) -- 經典藍色
+DividerBtn.Position = UDim2.new(0.5, -90, 0, 135) -- 放在 Anti-AFK 按鈕下方
+DividerBtn.BackgroundColor3 = Color3.fromRGB(0, 122, 255) -- 漂亮的清理藍
 DividerBtn.Text = "🧹 控制台分行 / 清理"
 DividerBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 DividerBtn.TextSize = 13
 DividerBtn.Font = Enum.Font.SourceSansBold
-DividerBtn.AutoButtonColor = true -- 點擊時會有自動微弱變暗的反饋
+DividerBtn.AutoButtonColor = true -- 點擊反饋
 DividerBtn.Parent = MainFrame
 
--- 給按鈕加上圓角
 local BtnCorner3 = Instance.new("UICorner")
 BtnCorner3.CornerRadius = UDim.new(0, 6)
 BtnCorner3.Parent = DividerBtn
@@ -189,13 +177,15 @@ BtnCorner3.Parent = DividerBtn
 -- 點擊事件：在 Console 輸出精美的分段
 DividerBtn.MouseButton1Click:Connect(function()
     print("\n\n" .. string.rep("=", 50))
+    print("🧹 [ 控制台日誌已分段 ] 🧹")
+    print(string.rep("=", 50) .. "\n\n")
 end)
 
--- 版權/提示小標籤 (往下順移到底部，不與按鈕重疊)
+-- 版權/提示小標籤 (往下順移到底部 Y 軸 178，不再與按鈕發生衝突)
 local CreditLabel = Instance.new("TextLabel")
 CreditLabel.Name = "CreditLabel"
 CreditLabel.Size = UDim2.new(1, 0, 0, 20)
-CreditLabel.Position = UDim2.new(0, 0, 0, 178) -- 往下移到 Y 軸 178
+CreditLabel.Position = UDim2.new(0, 0, 0, 178)
 CreditLabel.BackgroundTransparency = 1
 CreditLabel.Text = "按住標題列可拖曳視窗"
 CreditLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
