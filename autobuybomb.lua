@@ -63,10 +63,22 @@ ScreenGui.Name = "MountainRNG_AutoBuyUI"
 ScreenGui.Parent = CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- 主面板 (稍微加高高度以容納防踢按鈕)
+-- ==========================================================
+-- 2. 建立精美 GUI 控制面板 (防止重複生成)
+-- ==========================================================
+if CoreGui:FindFirstChild("MountainRNG_AutoBuyUI") then
+    CoreGui.MountainRNG_AutoBuyUI:Destroy()
+end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "MountainRNG_AutoBuyUI"
+ScreenGui.Parent = CoreGui
+ScreenGui.ResetOnSpawn = false
+
+-- 主面板 (加高高度至 210，完美容納 3 個按鈕與底部提示字)
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 220, 0, 160)
+MainFrame.Size = UDim2.new(0, 220, 0, 210) -- 高度拉長到 210
 MainFrame.Position = UDim2.new(0.05, 0, 0.2, 0)
 MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 MainFrame.BorderSizePixel = 0
@@ -134,39 +146,42 @@ local BtnCorner2 = Instance.new("UICorner")
 BtnCorner2.CornerRadius = UDim.new(0, 6)
 BtnCorner2.Parent = AfkBtn
 
--- 版權/提示小標籤
+-- 【控制台分行按鈕】 (藍色美化版)
+local DividerBtn = Instance.new("TextButton")
+DividerBtn.Name = "DividerBtn"
+DividerBtn.Size = UDim2.new(0, 180, 0, 32)
+DividerBtn.Position = UDim2.new(0.5, -90, 0, 135) -- 放在 Anti-AFK 按鈕下方，間距為 8 像素
+DividerBtn.BackgroundColor3 = Color3.fromRGB(0, 122, 255) -- 經典藍色
+DividerBtn.Text = "🧹 控制台分行 / 清理"
+DividerBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+DividerBtn.TextSize = 13
+DividerBtn.Font = Enum.Font.SourceSansBold
+DividerBtn.AutoButtonColor = true -- 點擊時會有自動微弱變暗的反饋
+DividerBtn.Parent = MainFrame
+
+-- 給按鈕加上圓角
+local BtnCorner3 = Instance.new("UICorner")
+BtnCorner3.CornerRadius = UDim.new(0, 6)
+BtnCorner3.Parent = DividerBtn
+
+-- 點擊事件：在 Console 輸出精美的分段
+DividerBtn.MouseButton1Click:Connect(function()
+    print("\n\n" .. string.rep("=", 50))
+    print("🧹 [ 控制台日誌已分段 ] 🧹")
+    print(string.rep("=", 50) .. "\n\n")
+end)
+
+-- 版權/提示小標籤 (往下順移到底部，不與按鈕重疊)
 local CreditLabel = Instance.new("TextLabel")
 CreditLabel.Name = "CreditLabel"
 CreditLabel.Size = UDim2.new(1, 0, 0, 20)
-CreditLabel.Position = UDim2.new(0, 0, 0, 135)
+CreditLabel.Position = UDim2.new(0, 0, 0, 178) -- 往下移到 Y 軸 178
 CreditLabel.BackgroundTransparency = 1
 CreditLabel.Text = "按住標題列可拖曳視窗"
 CreditLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
 CreditLabel.TextSize = 10
 CreditLabel.Font = Enum.Font.SourceSansItalic
 CreditLabel.Parent = MainFrame
-
--- 【控制台分行按鈕】
-local DividerBtn = Instance.new("TextButton")
-DividerBtn.Name = "DividerBtn"
-DividerBtn.Size = UDim2.new(0, 180, 0, 32)
-DividerBtn.Position = UDim2.new(0.5, -90, 0, 135) -- 放在 Anti-AFK 按鈕下方
-DividerBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80) -- 灰色按鈕
-DividerBtn.Text = "控制台分行"
-DividerBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-DividerBtn.TextSize = 14
-DividerBtn.Font = Enum.Font.SourceSansBold
-DividerBtn.Parent = MainFrame
-
--- 給按鈕加上圓角（跟上面的自動購買按鈕一樣）
-local BtnCorner3 = Instance.new("UICorner")
-BtnCorner3.CornerRadius = UDim.new(0, 6)
-BtnCorner3.Parent = DividerBtn
-
--- 點擊事件：點下去就在 Console 印出分行線
-DividerBtn.MouseButton1Click:Connect(function()
-    print("=======================================")
-end)
 
 -- ==========================================================
 -- 3. 核心購買與變數欺騙邏輯
