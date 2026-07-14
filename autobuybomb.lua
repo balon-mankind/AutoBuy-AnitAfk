@@ -146,6 +146,28 @@ CreditLabel.TextSize = 10
 CreditLabel.Font = Enum.Font.SourceSansItalic
 CreditLabel.Parent = MainFrame
 
+-- 【控制台分行按鈕】
+local DividerBtn = Instance.new("TextButton")
+DividerBtn.Name = "DividerBtn"
+DividerBtn.Size = UDim2.new(0, 180, 0, 32)
+DividerBtn.Position = UDim2.new(0.5, -90, 0, 135) -- 放在 Anti-AFK 按鈕下方
+DividerBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80) -- 灰色按鈕
+DividerBtn.Text = "控制台分行"
+DividerBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+DividerBtn.TextSize = 14
+DividerBtn.Font = Enum.Font.SourceSansBold
+DividerBtn.Parent = MainFrame
+
+-- 給按鈕加上圓角（跟上面的自動購買按鈕一樣）
+local BtnCorner3 = Instance.new("UICorner")
+BtnCorner3.CornerRadius = UDim.new(0, 6)
+BtnCorner3.Parent = DividerBtn
+
+-- 點擊事件：點下去就在 Console 印出分行線
+DividerBtn.MouseButton1Click:Connect(function()
+    print("=======================================")
+end)
+
 -- ==========================================================
 -- 3. 核心購買與變數欺騙邏輯
 -- ==========================================================
