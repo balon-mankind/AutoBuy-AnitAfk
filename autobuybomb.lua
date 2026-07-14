@@ -5,6 +5,7 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local VirtualUser = game:GetService("VirtualUser")
 local CoreGui = game:GetService("CoreGui")
+local VirtualInputManager = game:GetService("VirtualInputManager")
 
 _G.AutoBuyBombs = false -- 預設關閉自動購買
 _G.AntiAFKEnabled = true -- 預設開啟防踢功能
@@ -31,10 +32,22 @@ task.spawn(function()
         task.wait(30) -- 每 30 秒檢查並動一下
         if _G.AntiAFKEnabled then
             pcall(function()
-                VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-                task.wait(0.1)
-                VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-                print("[Anti-AFK] 已過 30 秒，自動在後台模擬點擊防止斷線。")
+                -- 1. 模擬按下 A 鍵 (往左走一下)
+                VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.A, false, game)
+                task.wait(0.15) -- 按住 0.15 秒
+                VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.A, false, game)
+                
+                task.wait(0.1) -- 稍微停頓
+                
+                -- 2. 模擬按下 D 鍵 (往右走一下，回到原位)
+                VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.D, false, game)
+                task.wait(0.15) -- 按住 0.15 秒
+                VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.D, false, game)
+                
+                -- 🌟 自動輸出 30s 間隔分隔線
+                print("\n" .. string.rep("-", 15) .. " [ Anti-AFK: 30s Passed ] " .. string.rep("-", 15))
+                print("🛡️ [防踢系統] 已自動模擬 A D 移動，持續守護掛機中...")
+                print(string.rep("-", 48) .. "\n")
             end)
         end
     end
@@ -44,9 +57,18 @@ end)
 LocalPlayer.Idled:Connect(function()
     if _G.AntiAFKEnabled then
         pcall(function()
-            VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+            -- 雙重保險：同樣執行 A D 移動
+            VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.A, false, game)
+            task.wait(0.15)
+            VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.A, false, game)
+            
             task.wait(0.1)
-            VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+            
+            VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.D, false, game)
+            task.wait(0.15)
+            VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.D, false, game)
+            
+            print("🚨 [防踢系統] 偵測到角色閒置 (Idled)，雙重保險已觸發 A D 移動防踢！")
         end)
     end
 end)
