@@ -7,7 +7,7 @@ local VirtualUser = game:GetService("VirtualUser")
 local CoreGui = game:GetService("CoreGui")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 
-_G.AutoBuyBombs = false -- 預設關閉自動購買
+_G.AutoBuyBombs = true -- 預設關閉自動購買
 _G.AntiAFKEnabled = true -- 預設開啟防踢功能
 
 local CHECK_DELAY = 0.1  -- 有貨時的狂刷頻率（秒）
