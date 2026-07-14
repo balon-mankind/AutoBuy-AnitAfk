@@ -167,8 +167,6 @@ BtnCorner3.Parent = DividerBtn
 -- 點擊事件：在 Console 輸出精美的分段
 DividerBtn.MouseButton1Click:Connect(function()
     print("\n\n" .. string.rep("=", 50))
-    print("🧹 [ 控制台日誌已分段 ] 🧹")
-    print(string.rep("=", 50) .. "\n\n")
 end)
 
 -- 版權/提示小標籤 (往下順移到底部，不與按鈕重疊)
